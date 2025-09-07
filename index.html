@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>与凯琳的约会日记</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9e9;
+            color: #3a4d39;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30,10 Q40,10 40,20 Q40,30 30,30 Q20,30 20,20 Q20,10 30,10 Z' fill='none' stroke='%23b5c9b1' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 80px;
+            min-height: 100vh;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '🦝🩵🐾🦉';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+        
+        header::after {
+            content: '🐇🦊🐿️🐾';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+        
+        h1 {
+            color: #5a7247;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .subtitle {
+            color: #718768;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .animal-emblem {
+            font-size: 3.5rem;
+            margin: 15px 0;
+            letter-spacing: 10px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .add-btn {
+            display: block;
+            margin: 0 auto 40px;
+            background-color: #718768;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .add-btn:hover {
+            background-color: #5a7247;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 30px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, #a8d186, #718768, #a8d186);
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        /* 足迹装饰 */
+        .timeline::after {
+            content: '🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 20px;
+            word-break: break-all;
+            font-size: 1.2rem;
+            color: #a8d186;
+            opacity: 0.7;
+            height: 100%;
+            overflow: hidden;
+            line-height: 1.8;
+        }
+        
+        .date-card {
+            position: relative;
+            width: 45%;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 3px solid #e8f1e1;
+            cursor: pointer;
+        }
+        
+        .date-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .date-card:nth-child(odd) {
+            margin-left: auto;
+            border-left: 5px solid #718768;
+        }
+        
+        .date-card:nth-child(even) {
+            margin-right: auto;
+            border-right: 5px solid #a8d186;
+        }
+        
+        /* 卡片上的动物装饰 */
+        .date-card::before {
+            content: attr(data-animal);
+            position: absolute;
+            top: -15px;
+            font-size: 2rem;
+        }
+        
+        .date-card:nth-child(odd)::before {
+            right: -15px;
+        }
+        
+        .date-card:nth-child(even)::before {
+            left: -15px;
+        }
+        
+        .card-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: rgba(255,255,255,0.8);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .edit-btn {
+            color: #5a7247;
+        }
+        
+        .edit-btn:hover {
+            background: #e8f1e1;
+            color: #3a4d39;
+            transform: scale(1.1);
+        }
+        
+        .delete-btn {
+            color: #e74c3c;
+        }
+        
+        .delete-btn:hover {
+            background: #fee;
+            transform: scale(1.1);
+        }
+        
+        .date {
+            font-weight: bold;
+            color: #5a7247;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #e8f1e1;
+        }
+        
+        .emojis {
+            font-size: 2rem;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .short-summary {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .read-more {
+            color: #718768;
+            font-weight: bold;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .read-more:hover {
+            color: #5a7247;
+            transform: translateX(5px);
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .keyword {
+            background-color: #e8f1e1;
+            color: #5a7247;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px dashed #a8d186;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline::after {
+                left: 30px;
+            }
+            
+            .date-card {
+                width: calc(100% - 80px);
+                margin-left: 60px;
+            }
+            
+            .date-card:nth-child(odd),
+            .date-card:nth-child(even) {
+                margin-left: 60px;
+                margin-right: 0;
+                border-left: 5px solid #718768;
+                border-right: none;
+            }
+            
+            .date-card:nth-child(odd)::before,
+            .date-card:nth-child(even)::before {
+                left: -15px;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718768;
+            font-size: 1rem;
+            margin-top: 30px;
+        }
+        
+        .footer-animals {
+            font-size: 1.5rem;
+            margin: 15px 0;
+            letter-spacing: 8px;
+        }
+        
+        /* 模态框样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #a8d186, #718768);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.1);
+        }
+        
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #5a7247;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8f1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #a8d186;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* 图片上传区域 */
+        .image-upload {
+            border: 2px dashed #e8f1e1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .image-upload:hover {
+            border-color: #a8d186;
+            background-color: #f9fcf7;
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            color: #a8d186;
+            margin-bottom: 10px;
+        }
+        
+        .image-upload input {
+            display: none;
+        }
+        
+        .upload-text {
+            color: #718768;
+        }
+        
+        .upload-limit {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #999;
+        }
+        
+        /* 图片预览区域 */
+        .image-previews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .preview-item {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .keywords-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .keyword-tag {
+            background-color: #e8f1e1;
+            color: #5a7247;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .remove-keyword {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e8f1e1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-cancel {
+            background-color: #f1f1f1;
+            color: #777;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .btn-save {
+            background-color: #718768;
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background-color: #5a7247;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718768;
+        }
+        
+        .empty-animal {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>与凯琳约会日记</h1>
+            <div class="animal-emblem">🦭🐰🦝🦦</div>
+            <p class="subtitle">记录我们的美好的时光</p>
+        </header>
+        
+        <button class="add-btn" id="addEntryBtn">
+            <i class="fas fa-plus"></i> 添加新的约会记录
+        </button>
+        
+        <div class="timeline" id="timeline">
+            <!-- 约会记录将在这里动态生成 -->
+        </div>
+        
+        <footer>
+            <div class="footer-animals">🐾🐈🦭🦦</div>
+            <p>我们的故事冒险，还在继续... ❤️</p>
+        </footer>
+    </div>
+
+    <!-- 添加/编辑日记模态框 -->
+    <div class="modal-overlay" id="entryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"><i class="fas fa-paw"></i> 添加新约会</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="entryForm">
+                    <input type="hidden" id="entryId">
+                    
+                    <div class="form-group">
+                        <label for="date">约会日期</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="animal">代表动物</label>
+                        <select id="animal" required>
+                            <option value="🦭">海豹 🦭</option>
+                            <option value="🦋">蝴蝶 🦋</option>
+                            <option value="🐿️">松鼠 🐿️</option>
+                            <option value="🐇">兔子 🐇</option>
+                            <option value="🦊">狐狸 🦊</option>
+                            <option value="🐻">小熊 🐻</option>
+                            <option value="🦉">猫头鹰 🦉</option>
+                            <option value="🐾">足迹 🐾</option>
+                            <option value="🐼">熊猫 🐼</option>
+                            <option value="🦦">水獭 🦦</option>
+                            <option value="🦝">浣熊 🦝</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emojis">表情符号</label>
+                        <input type="text" id="emojis" placeholder="例如：🦊💌🌸" required>
+                        <small style="color:#718768; margin-top:5px; display:block;">输入相关的表情符号，用空格分隔</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shortSummary">简短描述</label>
+                        <input type="text" id="shortSummary" placeholder="简短描述这次约会..." required>
+                        <small style="color:#718768; margin-top:5px; display:block;">显示在主页面的简短描述</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="summary">详细描述</label>
+                        <textarea id="summary" placeholder="详细描述一下这次约会的美好时光..." required></textarea>
+                        <small style="color:#718768; margin-top:5px; display:block;">点击后显示的完整内容</small>
+                    </div>
+                    
+                    <!-- 图片上传区域 -->
+                    <div class="form-group">
+                        <label>添加照片（最多5张）</label>
+                        <div class="image-upload" id="imageUpload">
+                            <div class="upload-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <p class="upload-text">点击或拖拽图片到这里上传</p>
+                            <p class="upload-limit">支持JPG、PNG格式，每张不超过5MB</p>
+                            <input type="file" id="photos" accept="image/*" multiple>
+                        </div>
+                        <div class="image-previews" id="imagePreviews"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>关键词
+                            <input type="text" id="keywordInput" placeholder="输入关键词后按回车添加">
+                        </label>
+                        <div class="keywords-input" id="keywordsContainer"></div>
+                        <input type="hidden" id="keywords" value="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelBtn">取消</button>
+                <button class="btn btn-save" id="saveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-exclamation-triangle"></i> 确认删除</h2>
+                <button class="close-modal" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>你确定要删除这条约会记录吗？这个操作无法撤销哦。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelDeleteBtn">取消</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM元素
+            const timeline = document.getElementById('timeline');
+            const addEntryBtn = document.getElementById('addEntryBtn');
+            const entryModal = document.getElementById('entryModal');
+            const deleteModal = document.getElementById('deleteModal');
+            const closeModal = document.getElementById('closeModal');
+            const closeDeleteModal = document.getElementById('closeDeleteModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const entryForm = document.getElementById('entryForm');
+            const modalTitle = document.getElementById('modalTitle');
+            const keywordInput = document.getElementById('keywordInput');
+            const keywordsContainer = document.getElementById('keywordsContainer');
+            const keywordsInput = document.getElementById('keywords');
+            const imageUpload = document.getElementById('imageUpload');
+            const photosInput = document.getElementById('photos');
+            const imagePreviews = document.getElementById('imagePreviews');
+            
+            // 数据存储
+            let entries = JSON.parse(localStorage.getItem('animalDatingDiaryWithDetail')) || [];
+            let currentEntryId = null;
+            let currentKeywords = [];
+            let currentImages = [];
+            let previewUrls = [];
+            
+            // 如果本地存储中没有数据，添加预设的5次约会记录
+            if (entries.length === 0) {
+                // 预设的5次约会记录
+                const sampleEntries = [
+                    {
+                        "id": "1",
+                        "date": "2025-02-14",
+                        "title": "Dating 1🐟🦭🦦🍣",
+                        "shortSummary": "第一次见面，在动物园约会，她送我白色海豹挂坠，一起寻找水獭和小浣熊，晚上吃了日料",
+                        "summary": "二月十四号，我们第一次见面，约在动物园。她稍迟了一些，我从麦当劳出来一眼就认出了她。说实话，我有点怦然心动，她比照片上更可爱。进园后，她送了我一个白色海豹小挂坠，手持蓝色小鱼，非常可爱，让我有些惊喜又不好意思——我并没有准备礼物。她很喜欢小浣熊，可惜展区在装修，我们绕了几圈也没找到。鱼的展区不太好看，但鸟类特别是孔雀令人印象深刻。她对动物很了解，说是从小爱看动物世界之类的纪录片。她特别喜欢狐狸和水獭，为了找水獭，我们绕了一大圈，最后发现其实就在入口附近。离开动物园后，我们原本打算去北京路的大雄寿司，但因为情人节人太多，最终打车去了我家附近的日料店。晚餐时，她给我看了她的毕业设计，聊了学校的事情，还解释了她的素食习惯——其实是不喜欢肉本身的味道，所以不吃日式烤串，但吃鱼。最后我们散了一会儿步，在baker store买了面包，我送她到地铁站后告别。",
+                        "keywords": ["动物园", "第一次见面", "白色海豹挂坠", "水獭", "日料", "三文鱼面"],
+                        "animal": "🦭", // 核心元素：海豹挂坠+动物园，选海豹最贴合
+                        "emojis": "Dating 1🐟🦭🦦🍣", // 包含海豹、水獭、熊猫（动物园）、寿司、拉面（日料）
+                        "images": [
+                            "images/1-动物园.JPG", // 动物园动物场景
+                            "images/1-狮子.JPG",
+                            "images/1-三文鱼面.JPG",  // 日料场景
+                            "images/1-挂饰.jpg"
+                        ]
+                    },
+                    {
+                        "id": "2",
+                        "date": "2025-02-20",
+                        "title": "Dating 2㊞⚱︎👨‍🌾🍅",
+                        "shortSummary": "她邀请我去看大元帅府的琉璃展，沿途经过老旧小区，展上她像孩子一样好奇，集章时直接握住我的手",
+                        "summary": "第一次见面的一周后，她邀请我去看大元帅府的琉璃展。从市二宫地铁站出来，经过许多老旧小区，但没有我期待中的街道景色。不过这不是重点。展览中并没有什么令我印象深刻的展品，反倒是她对一切小玩意都充满好奇，什么电报机、邮箱、空调都想动一下，像个小孩子。集章的时候，她直接握着我的手来盖章，目的性有点太强了，过于主动，但我也没有抗拒。不知不觉两个小时就过去了。我们在沿江大道旁散步，路灯像厨师帽，公交车站的电话她也想去弄一弄。很快我们走过了海珠桥，到海珠广场坐地铁。她提到膝盖有伤，最近才刚能走路，所以走得不多。然后我们坐地铁到了淘金，又一次在我家旁边——这次可不是我带的路，她选了一家餐厅“农夫厨房”，你说这不巧了吗，就在我家旁，还更近了，当然我没告诉她。我们吃了青菜饭，很好吃。吃饭时的聊天记忆像是被删除了一般，只依稀记得讨论了吃素的问题，因为她的个人标准很特别。哦，比较重要的是，这时候或之前，我们建了一个共享相册，我起名叫“禁止单方面拍摄”。之后又到baker store买了面包，然后去地铁站送她结束。",
+                        "keywords": ["琉璃展", "市二宫", "沿江大道", "农夫厨房", "共享相册", "面包"],
+                        "animal": "🐱", // 贴合“像孩子一样好奇”的灵动感，且用户原补充数据指定
+                        "emojis": "Dating 2㊞⚱︎👨‍🌾🍅🍞", // 包含展览（隐含文化感）、茶馆、足迹（散步）、艺术展、面包
+                        "images": [
+                            "images/2-盖章.JPG",  // 老旧小区/文化展场景
+                            "images/2-琉璃.JPG",  // 餐厅/日常场景
+                            "images/2-电报.JPG",
+                            "images/2-吃饭.JPG"
+                        ]
+                    },
+                    {
+                        "id": "3",
+                        "date": "2025-03-10",
+                        "title": "Dating 3🍣📘🎹🍕",
+                        "shortSummary": "丰富的一天，先去漫画店，后租琴房弹琴，晚上在海珠广场聊天，她提到吃的药会影响记忆",
+                        "summary": "很丰富的一天。在约会前几天我们一直在聊天。虽然一开始我有些犹豫，但一切似乎在往好的方向发展。她曾告诉我她有双相情感障碍，需要吃药才能睡觉。我们先去了昌岗一家她想去的漫画店，但周一没开门，于是转去北京路。我们先在大雄寿司吃了午饭，其实也就六到七分的水平。之后去了漫画店，在大佛寺对面的商场旁，那里有很多猫，我们找了个下铺坐了下来。两个小时很快过去，又加了一个钟，玩了《双人成行》。之后我们找了家琴行，租了一个小时的琴房，时间又像按下了加速键。她在baker store买了面包后，我们打车到海珠广场的Happy Monkey吃了晚餐。晚上室外景色不错，就是楼房的霓虹灯很丑。她说到她吃的药会影响记忆，不记得上一次约会去了哪里，除非看聊天记录。我听着，聊着，具体说了什么我不记得了，也许失忆的人是我。离开前，我们在海珠广场坐着，有落叶，我们撕着落叶玩。我把头靠在凯琳肩膀上，很幸福。一天就这么结束了，很开心，很丰富。",
+                        "keywords": ["漫画店", "大雄寿司", "琴房", "海珠广场", "记忆", "落叶"],
+                        "animal": "🐿️", // 松鼠灵动活泼，贴合漫画店、玩游戏的轻松氛围
+                        "emojis": "Dating 3🍣📘🎮🎹🍕", // 包含漫画书、钢琴、落叶（海珠广场）、猫咪（漫画店）、游戏
+                        "images": [
+                            "images/3-寿司.JPG", // 漫画店/休闲空间场景
+                            "images/3-漫画店.JPG",
+                            "images/3-江边.JPG",
+                            "images/3-风车.JPG"  // 琴房/音乐场景
+                        ]
+                    },
+                    {
+                        "id": "4",
+                        "date": "2025-03-16",
+                        "title": "Dating 4🎬🎮🤲🧸",
+                        "shortSummary": "在北京路约会，玩分手厨房游戏，看《洛城机密》时她问能不能亲我的脸，后来牵手，最后在地铁分别时不舍",
+                        "summary": "第一次去动物园她迟到，第二次看琉璃展我迟到，第三次看漫画她迟到，这次哈哈，还是她迟到了。我在北京路的地下商场一个人逛，有种莫名的自由感，因为我似乎从没一个人逛过街。在一家平价超市，我看见好多零食，像小孩子一样兴奋。我问她想吃什么，她说巧克力，于是我买了一条白巧克力。去私人影院的路上，她好奇街边卖画的店，但没停下。我们去的店是打游戏和看电影二合一的。我基本没玩过手柄游戏，选了分手厨房，玩了一个小时。我技术不熟练，但前几关成绩不错。我提议开始前计划好，每次新关卡她都像小老师一样带我到屏幕前介绍，其实我根本没看游戏，一直在看她开心的样子。最后一关没过，她说不玩了，看电影吧，是不是生气了？哈哈真可爱。选了《洛城机密》，看到一半她突然问：“我能不能亲亲你的脸？”我不知怎么回答，尝试伸出一只手臂搂着她，她靠在我肩上。我的手抽回来后，她的手也牵上了我。还好房间没开灯，不然我通红的脸会被看见。看到六点，电影没看完但要离开了。找地方吃饭时我没胆牵她的手，最后进了北京路天河城的牛扒店，没以前好吃。离开前在地下商场逛了一圈，试图延长时间。在地铁口前的公仔店，有可爱的小动物公仔，她给我拍了照。地铁上我们一句话也没说，她一直转头另一边，我想牵手，想下车前抱抱，但没赢“心理斗争”。下车前我才说：“我要下车了。”牵了几秒钟手，感觉她拽着我不想我走，但我还是挣脱了，下一秒就后悔了。我在车厢外透过门口看着她，她看着手机，我不知道为什么不敢上前。这一周我们保持联系，打了两次视频通话，每次都超过两小时，一开始我不习惯，后来只觉得时间太短了。",
+                        "keywords": ["北京路", "分手厨房", "私人影院", "《洛城机密》", "第一次牵手", "地铁分别"],
+                        "animal": "🐇", // 兔子温柔可爱，贴合“第一次牵手”的羞涩浪漫氛围
+                        "emojis": "Dating 4🎬🎮🤲🧸🍫🚇", // 包含游戏、电影、公仔、巧克力、地铁
+                        "images": [
+                            "images/4-玩偶.JPG",
+                            "images/4-狐狸.JPG"
+                        ]
+                    },
+                    {
+                        "id": "5",
+                        "date": "2025-03-23",
+                        "title": "Dating 5🎮💌🩵💐",
+                        "shortSummary": "我准备了小八公仔和针织蓝花束，还有表白信，在电玩店告白成功，她送我太阳项链，我们成为情侣",
+                        "summary": "都说真实的告白需要一封信和一束花，于是我买了小八的公仔和针织的蓝色花，绑成花束，把不敢说出口的肉麻话写在信里。花束放书包有点勉强，希望没变形。没想到这次我迟到，还走错了地铁口，花了好半天终于在红绿灯前的路口见面。六运小区很多人，也没想象中好，很多网红打卡点，不好玩。虽然上次看电影牵手了，但没确定关系，我不敢在街上牵她。逛了一会后，常驻节目——买面包。我们跟着导航找面包店，也随机偶遇，都不满意。想找电玩店，20米外有一家，开门坎坷，楼上没位置，没缘分。凯琳还是好奇宝宝，想看用电间里有什么。找另一家无果，离开六运小区，到万菱汇附近的电玩店打游戏。过马路时我想牵她的手，但只拉了手腕。店里剩最后一间房，刚开始《底特律：变人》没有了，我们先玩搬家游戏。我不自觉地和她亲密，头贴她肩膀上，躺她腿上。我不确定什么时候拿出礼物告白，突然她说有礼物给我，拿出漂亮盒子，里面是太阳项链，和她同款，还有一对高音谱号挂饰，白和蓝，她让我选，我想把她喜欢的蓝留给她，但她说要送蓝色给我。她亲手给我戴上项链后，我说：“我也有礼物送你。”她没想到。我让她闭上眼睛，她转过身（现在想，她不会以为我要亲她吧）。我拿出DIY小八花束，她一句“天呐，好可爱”，让我心融化。“这个礼物有多少分？”我问。“满分是多少？”“10分。”“那就有一万分！”她高兴的表情让我幸福。但我还没顺势拿出表白信。玩《底特律：变人》时，她一直抱我，牵我的手。一小时很快过去，电源线提醒只剩十分钟，我放下手柄整个人被她抱住。其实还没确定关系，我说：“这好吗？”她回：“不好那就不抱了。”我想也许时候了，拿出信。好紧张，第一次和人表白，最终没亲口说出，让她自己读。她读完用信纸遮住脸，发出似抽泣的声音。我抱住她，略有停顿地问：“我可以做你男朋友吗？”她说：“我可以晚一点答复吗？”我说：“不行。”她靠在我怀里，我又问一遍，她答应了。我们在信件最后签名，她画了个爱心。离开电玩店去吃饭的地方，一路上手紧紧牵在一起，一直到吃饭，一直到分别，这段时间是我最最最幸福的。在三号线分岔口，我们要往不同方向，离开前拥抱分别，她事后说抱的时间太少了。没想到扶手梯下去后还能看见对方一次，但也就结束了。",
+                        "keywords": ["告白", "小八花束", "表白信", "太阳项链", "电玩店", "成为情侣"],
+                        "animal": "🦊", // 狐狸浪漫灵动，贴合“告白成功”的甜蜜氛围
+                        "emojis": "Dating 5🎮💌🩵💐", // 包含表白信、花束、游戏、蓝色（针织花）、礼物
+                        "images": [
+                            "images/5-游戏.JPG", // 花束/告白场景
+                            "images/5-碗.JPG"  // 电玩店场景
+                        ]
+                    }
+                ];
+                
+                entries = sampleEntries;
+                // 保存到本地存储
+                localStorage.setItem('animalDatingDiaryWithDetail', JSON.stringify(entries));
+            }
+            
+            // 初始化页面
+            renderEntries();
+            
+            // 渲染所有日记条目
+            function renderEntries() {
+                if (entries.length === 0) {
+                    timeline.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-animal">🦝</div>
+                            <h3>还没有约会记录呢</h3>
+                            <p>点击"添加新的约会记录"按钮，开始记录你们的美好时光吧～</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 按日期排序，最新的在前面
+                const sortedEntries = [...entries].sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                timeline.innerHTML = '';
+                sortedEntries.forEach(entry => {
+                    const card = document.createElement('div');
+                    card.className = 'date-card';
+                    card.setAttribute('data-animal', entry.animal);
+                    card.setAttribute('data-id', entry.id);
+                    
+                    const keywordsHTML = entry.keywords.map(kw => 
+                        `<span class="keyword">#${kw}</span>`
+                    ).join('');
+                    
+                    card.innerHTML = `
+                        <div class="card-actions">
+                            <button class="action-btn edit-btn" data-id="${entry.id}" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${entry.id}" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="date">${formatDate(entry.date)}</div>
+                        <div class="emojis">${entry.emojis}</div>
+                        <div class="short-summary">${entry.shortSummary}</div>
+                        <span class="read-more">查看详情 <i class="fas fa-arrow-right"></i></span>
+                        <div class="keywords">${keywordsHTML}</div>
+                    `;
+                    
+                    timeline.appendChild(card);
+                    
+                    // 添加点击事件，跳转到详情页
+                    card.addEventListener('click', function(e) {
+                        // 忽略按钮点击
+                        if (e.target.closest('.action-btn')) return;
+                        
+                        const entryId = this.getAttribute('data-id');
+                        window.location.href = `detail.html?id=${entryId}`;
+                    });
+                });
+                
+                // 添加编辑和删除事件监听
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation(); // 阻止事件冒泡到卡片
+                        const id = this.getAttribute('data-id');
+                        openEditModal(id);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation(); // 阻止事件冒泡到卡片
+                        const id = this.getAttribute('data-id');
+                        openDeleteModal(id);
+                    });
+                });
+            }
+            
+            // 打开添加模态框
+            addEntryBtn.addEventListener('click', function() {
+                currentEntryId = null;
+                modalTitle.innerHTML = '<i class="fas fa-paw"></i> 添加新约会';
+                entryForm.reset();
+                currentKeywords = [];
+                currentImages = [];
+                clearImagePreviews();
+                keywordsContainer.innerHTML = '';
+                keywordsInput.value = '';
+                
+                // 设置默认日期为今天
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('date').value = today;
+                
+                entryModal.classList.add('active');
+            });
+            
+            // 打开编辑模态框
+            function openEditModal(id) {
+                const entry = entries.find(e => e.id === id);
+                if (!entry) return;
+                
+                currentEntryId = id;
+                modalTitle.innerHTML = '<i class="fas fa-edit"></i> 编辑约会记录';
+                
+                // 填充表单数据
+                document.getElementById('date').value = entry.date;
+                document.getElementById('animal').value = entry.animal;
+                document.getElementById('emojis').value = entry.emojis;
+                document.getElementById('shortSummary').value = entry.shortSummary;
+                document.getElementById('summary').value = entry.summary;
+                
+                // 填充图片
+                currentImages = [...(entry.images || [])];
+                renderImagePreviews();
+                
+                // 填充关键词
+                currentKeywords = [...entry.keywords];
+                keywordsInput.value = currentKeywords.join(',');
+                renderKeywords();
+                
+                entryModal.classList.add('active');
+            }
+            
+            // 打开删除模态框
+            function openDeleteModal(id) {
+                currentEntryId = id;
+                deleteModal.classList.add('active');
+            }
+            
+            // 关闭所有模态框
+            function closeAllModals() {
+                entryModal.classList.remove('active');
+                deleteModal.classList.remove('active');
+            }
+            
+            // 图片上传处理
+            imageUpload.addEventListener('click', function() {
+                photosInput.click();
+            });
+            
+            // 阻止冒泡，避免点击上传区域关闭模态框
+            imageUpload.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // 拖拽上传
+            imageUpload.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#a8d186';
+                this.style.backgroundColor = '#f0f7ee';
+            });
+            
+            imageUpload.addEventListener('dragleave', function() {
+                this.style.borderColor = '#e8f1e1';
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            imageUpload.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#e8f1e1';
+                this.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    handleImageFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // 处理文件选择
+            photosInput.addEventListener('change', function() {
+                handleImageFiles(this.files);
+            });
+            
+            // 处理图片文件
+            function handleImageFiles(files) {
+                if (files.length === 0) return;
+                
+                // 检查总数量
+                if (currentImages.length + files.length > 5) {
+                    alert('最多只能上传5张图片哦～');
+                    return;
+                }
+                
+                // 处理每个文件
+                Array.from(files).forEach(file => {
+                    // 检查文件类型
+                    if (!file.type.startsWith('image/')) {
+                        alert('请上传图片文件（JPG或PNG格式）');
+                        return;
+                    }
+                    
+                    // 检查文件大小
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('图片大小不能超过5MB');
+                        return;
+                    }
+                    
+                    // 读取图片并添加到预览
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentImages.push(e.target.result);
+                        renderImagePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            // 渲染图片预览
+            function renderImagePreviews() {
+                clearImagePreviews();
+                
+                currentImages.forEach((img, index) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${img}" alt="预览图 ${index + 1}" class="preview-img">
+                        <span class="remove-image" data-index="${index}">&times;</span>
+                    `;
+                    imagePreviews.appendChild(previewItem);
+                });
+                
+                // 添加删除图片事件
+                document.querySelectorAll('.remove-image').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        currentImages.splice(index, 1);
+                        renderImagePreviews();
+                    });
+                });
+            }
+            
+            // 清除图片预览
+            function clearImagePreviews() {
+                imagePreviews.innerHTML = '';
+                // 释放预览URL
+                previewUrls.forEach(url => URL.revokeObjectURL(url));
+                previewUrls = [];
+            }
+            
+            // 关键词处理
+            keywordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    e.preventDefault();
+                    addKeyword(this.value.trim());
+                    this.value = '';
+                }
+            });
+            
+            function addKeyword(keyword) {
+                if (!currentKeywords.includes(keyword) && currentKeywords.length < 8) {
+                    currentKeywords.push(keyword);
+                    keywordsInput.value = currentKeywords.join(',');
+                    renderKeywords();
+                }
+            }
+            
+            function removeKeyword(index) {
+                currentKeywords.splice(index, 1);
+                keywordsInput.value = currentKeywords.join(',');
+                renderKeywords();
+            }
+            
+            function renderKeywords() {
+                keywordsContainer.innerHTML = currentKeywords.map((kw, index) => `
+                    <div class="keyword-tag">
+                        ${kw}
+                        <span class="remove-keyword" data-index="${index}">&times;</span>
+                    </div>
+                `).join('');
+                
+                // 添加删除关键词事件
+                document.querySelectorAll('.remove-keyword').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeKeyword(index);
+                    });
+                });
+            }
+            
+            // 保存日记条目
+            saveBtn.addEventListener('click', function() {
+                const date = document.getElementById('date').value;
+                const animal = document.getElementById('animal').value;
+                const emojis = document.getElementById('emojis').value;
+                const shortSummary = document.getElementById('shortSummary').value;
+                const summary = document.getElementById('summary').value;
+                const keywords = currentKeywords;
+                const images = currentImages;
+                
+                // 验证表单
+                if (!date || !animal || !emojis || !shortSummary || !summary) {
+                    alert('请填写所有必填字段哦～');
+                    return;
+                }
+                
+                if (keywords.length === 0) {
+                    alert('请至少添加一个关键词～');
+                    return;
+                }
+                
+                if (currentEntryId) {
+                    // 更新现有条目
+                    const index = entries.findIndex(e => e.id === currentEntryId);
+                    if (index !== -1) {
+                        entries[index] = {
+                            ...entries[index],
+                            date,
+                            animal,
+                            emojis,
+                            shortSummary,
+                            summary,
+                            keywords,
+                            images
+                        };
+                    }
+                } else {
+                    // 添加新条目
+                    const newEntry = {
+                        id: Date.now().toString(),
+                        date,
+                        animal,
+                        emojis,
+                        shortSummary,
+                        summary,
+                        keywords,
+                        images
+                    };
+                    entries.push(newEntry);
+                }
+                
+                // 保存到本地存储
+                localStorage.setItem('animalDatingDiaryWithDetail', JSON.stringify(entries));
+                
+                // 重新渲染并关闭模态框
+                renderEntries();
+                closeAllModals();
+            });
+            
+            // 确认删除
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (currentEntryId) {
+                    entries = entries.filter(e => e.id !== currentEntryId);
+                    localStorage.setItem('animalDatingDiaryWithDetail', JSON.stringify(entries));
+                    renderEntries();
+                    closeAllModals();
+                }
+            });
+            
+            // 关闭模态框事件
+            closeModal.addEventListener('click', closeAllModals);
+            closeDeleteModal.addEventListener('click', closeAllModals);
+            cancelBtn.addEventListener('click', closeAllModals);
+            cancelDeleteBtn.addEventListener('click', closeAllModals);
+            
+            // 点击模态框外部关闭
+            entryModal.addEventListener('click', function(e) {
+                if (e.target === entryModal) closeAllModals();
+            });
+            
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) closeAllModals();
+            });
+            
+            // 工具函数：格式化日期
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+                return new Date(dateString).toLocaleDateString('zh-CN', options);
+            }
+        });
+    </script>
+</body>
+</html>
+    
