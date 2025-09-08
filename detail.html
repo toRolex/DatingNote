@@ -152,45 +152,6 @@
             transform: scale(1.05);
         }
         
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px dashed #e8f1e1;
-        }
-        
-        .action-btn {
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .edit-btn {
-            background-color: #718768;
-            color: white;
-        }
-        
-        .edit-btn:hover {
-            background-color: #5a7247;
-        }
-        
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .delete-btn:hover {
-            background-color: #c0392b;
-        }
-        
         footer {
             text-align: center;
             margin-top: 40px;
@@ -458,14 +419,6 @@
             </div>
         </div>
         
-        <div class="actions">
-            <button class="action-btn edit-btn" id="editBtn">
-                <i class="fas fa-edit"></i> 编辑
-            </button>
-            <button class="action-btn delete-btn" id="deleteBtn">
-                <i class="fas fa-trash"></i> 删除
-            </button>
-        </div>
     </div>
     
     <footer>
@@ -484,29 +437,12 @@
         <div class="viewer-count" id="viewerCount">1/5</div>
     </div>
 
-    <!-- 删除确认模态框 -->
-    <div class="modal-overlay" id="deleteModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-exclamation-triangle"></i> 确认删除</h2>
-                <button class="close-modal" id="closeDeleteModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>你确定要删除这条约会记录吗？这个操作无法撤销哦。</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-cancel" id="cancelDeleteBtn">取消</button>
-                <button class="btn btn-danger" id="confirmDeleteBtn">删除</button>
-            </div>
-        </div>
-    </div>
+    <!-- 删除:删除确认模态框 -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM元素
             const backBtn = document.getElementById('backBtn');
-            const editBtn = document.getElementById('editBtn');
-            const deleteBtn = document.getElementById('deleteBtn');
             const animalBadge = document.getElementById('animalBadge');
             const entryDate = document.getElementById('entryDate');
             const entryEmojis = document.getElementById('entryEmojis');
@@ -519,10 +455,6 @@
             const prevImageBtn = document.getElementById('prevImage');
             const nextImageBtn = document.getElementById('nextImage');
             const closeViewer = document.getElementById('closeViewer');
-            const deleteModal = document.getElementById('deleteModal');
-            const closeDeleteModal = document.getElementById('closeDeleteModal');
-            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
             
             // 获取URL参数中的日记ID
             const urlParams = new URLSearchParams(window.location.search);
@@ -623,49 +555,14 @@
                 window.history.back();
             });
             
-            // 编辑按钮事件
-            editBtn.addEventListener('click', function() {
-                // 跳转到首页并打开编辑模态框（通过localStorage传递状态）
-                localStorage.setItem('editEntryId', entryId);
-                window.location.href = 'index.html';
-            });
-            
-            // 删除按钮事件
-            deleteBtn.addEventListener('click', function() {
-                deleteModal.classList.add('active');
-            });
-            
-            // 确认删除
-            confirmDeleteBtn.addEventListener('click', function() {
-                if (entryId) {
-                    entries = entries.filter(e => e.id !== entryId);
-                    localStorage.setItem('animalDatingDiaryWithDetail', JSON.stringify(entries));
-                    window.location.href = 'index.html';
-                }
-            });
             
             // 关闭图片查看器
             closeViewer.addEventListener('click', function() {
                 imageViewer.classList.remove('active');
             });
             
-            // 关闭删除模态框
-            closeDeleteModal.addEventListener('click', function() {
-                deleteModal.classList.remove('active');
-            });
-            
-            cancelDeleteBtn.addEventListener('click', function() {
-                deleteModal.classList.remove('active');
-            });
             
             // 点击模态框外部关闭
-            deleteModal.addEventListener('click', function(e) {
-                if (e.target === deleteModal) deleteModal.classList.remove('active');
-            });
-            
-            imageViewer.addEventListener('click', function(e) {
-                if (e.target === imageViewer) imageViewer.classList.remove('active');
-            });
             
             // 工具函数：格式化日期
             function formatDate(dateString) {
@@ -676,3 +573,6 @@
     </script>
 </body>
 </html>
+
+
+
